@@ -18,28 +18,27 @@ class SystemController extends Controller
 
     public function store_data()
     {
-        if(Order::StoreOrder()->where(['checked' => 0])->count() > 0 ){
-            $new_order =1;
-            $type='store_order';
-            $module_id=  Order::StoreOrder()->where(['checked' => 0])->latest()->first(['module_id'])->module_id;
-        }
-        elseif(Order::ParcelOrder()->where(['checked' => 0])->count() > 0 ){
-            $new_order =1;
-            $type='parcel';
-            $module_id= Order::ParcelOrder()->where(['checked' => 0])->latest()->first('module_id')->module_id;
-        }
-        elseif(addon_published_status('Rental') &&  Trips::where(['checked' => 0])->count() > 0 ){
-            $new_order =1;
-            $type='trip';
-            $module_id=Trips::where(['checked' => 0])->latest()->first(['module_id'])->module_id;
+        if (Order::StoreOrder()->where(['checked' => 0])->count() > 0) {
+            $new_order = 1;
+            $type = 'store_order';
+            $module_id =  Order::StoreOrder()->where(['checked' => 0])->latest()->first(['module_id'])->module_id;
+        } elseif (Order::ParcelOrder()->where(['checked' => 0])->count() > 0) {
+            $new_order = 1;
+            $type = 'parcel';
+            $module_id = Order::ParcelOrder()->where(['checked' => 0])->latest()->first('module_id')->module_id;
+        } elseif (addon_published_status('Rental') &&  Trips::where(['checked' => 0])->count() > 0) {
+            $new_order = 1;
+            $type = 'trip';
+            $module_id = Trips::where(['checked' => 0])->latest()->first(['module_id'])->module_id;
         }
 
         return response()->json([
             'success' => 1,
-            'data' => ['new_order' => $new_order ?? 0,
-                        'type' => $type ?? 'store_order',
-                        'module_id' => $module_id ?? 0
-                ]
+            'data' => [
+                'new_order' => $new_order ?? 0,
+                'type' => $type ?? 'store_order',
+                'module_id' => $module_id ?? 0
+            ]
         ]);
     }
 
@@ -50,6 +49,7 @@ class SystemController extends Controller
 
     public function settings_update(Request $request)
     {
+        dd($request->headers->get('referer'));
         $request->validate([
             'f_name' => 'required',
             'l_name' => 'required',
@@ -72,8 +72,8 @@ class SystemController extends Controller
         $admin->f_name = $request->f_name;
         $admin->l_name = $request->l_name;
 
-        if($admin->email != $request->email){
-            $login_remember_token= Str::random(60);
+        if ($admin->email != $request->email) {
+            $login_remember_token = Str::random(60);
             $admin->login_remember_token =  $login_remember_token;
             session(['login_remember_token' => $login_remember_token]);
         }
@@ -88,13 +88,13 @@ class SystemController extends Controller
     public function settings_password_update(Request $request)
     {
         $request->validate([
-            'password' => ['required','same:confirm_password', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', 'same:confirm_password', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'confirm_password' => 'required',
         ]);
 
         $admin = Admin::find(auth('admin')->id());
         $admin->password = bcrypt($request['password']);
-        $login_remember_token= Str::random(60);
+        $login_remember_token = Str::random(60);
         $admin->login_remember_token =  $login_remember_token;
         $admin->save();
         session(['login_remember_token' => $login_remember_token]);
@@ -136,8 +136,8 @@ class SystemController extends Controller
             ]);
         } else {
             Helpers::businessUpdateOrInsert(['key' => 'landing_page'], [
-                   'value' => $landing_page->value == 1 ? 0 : 1
-               ]);
+                'value' => $landing_page->value == 1 ? 0 : 1
+            ]);
         }
 
         if (isset($landing_page) && $landing_page->value) {
@@ -147,10 +147,10 @@ class SystemController extends Controller
     }
     public function system_currency(Request $request)
     {
-        $currency_check=Helpers::checkCurrency($request['currency']);
-        if( $currency_check !== true ){
-        return response()->json(['data'=> translate($currency_check) ],200);
+        $currency_check = Helpers::checkCurrency($request['currency']);
+        if ($currency_check !== true) {
+            return response()->json(['data' => translate($currency_check)], 200);
         }
-        return response()->json([],200);
+        return response()->json([], 200);
     }
 }
