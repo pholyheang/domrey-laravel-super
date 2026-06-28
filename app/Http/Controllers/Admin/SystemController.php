@@ -49,7 +49,6 @@ class SystemController extends Controller
 
     public function settings_update(Request $request)
     {
-        dd($request->headers->get('referer'));
         $request->validate([
             'f_name' => 'required',
             'l_name' => 'required',
