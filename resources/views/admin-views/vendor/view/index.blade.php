@@ -842,16 +842,13 @@
         initMap();
 
         function initMap() {
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
 
             map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 15,
                 center: myLatLng,
-                mapId: mapId
             });
-            const { AdvancedMarkerElement } = google.maps.marker;
 
-            new AdvancedMarkerElement({
+            new google.maps.Marker({
                 position: myLatLng,
                 map,
                 title: "{{ $store->name }}",

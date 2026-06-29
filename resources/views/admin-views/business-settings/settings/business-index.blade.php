@@ -1060,7 +1060,6 @@
     });
 
     function initAutocomplete() {
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
 
         var myLatLng = {
             lat: {{ $default_location ? $default_location['lat'] : '-33.8688' }},
@@ -1073,12 +1072,10 @@
                 },
             zoom: 13,
             mapTypeId: "roadmap",
-            mapId: mapId,
         });
 
-        const { AdvancedMarkerElement } = google.maps.marker;
 
-        var marker = new AdvancedMarkerElement({
+        var marker = new google.maps.Marker({
             position: myLatLng,
             map: map,
         });
@@ -1141,8 +1138,7 @@
                     console.log("Returned place contains no geometry");
                     return;
                 }
-                const { AdvancedMarkerElement } = google.maps.marker;
-                var mrkr = new AdvancedMarkerElement({
+                var mrkr = new google.maps.Marker({
                     map,
                     title: place.name,
                     position: place.geometry.location,

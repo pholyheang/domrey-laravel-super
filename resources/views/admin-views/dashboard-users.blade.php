@@ -523,13 +523,11 @@
             lng: {{ $default_location ? $default_location['lng'] : '90.360587' }}
             };
         var dmbounds = new google.maps.LatLngBounds(null);
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
 
         var myOptions = {
             zoom: 13,
             center: myLatlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapId: mapId,
 
         }
         var deliveryMan = <?php echo json_encode($deliveryMen); ?>;
@@ -538,7 +536,6 @@
         var infowindow = new google.maps.InfoWindow();
 
         map.fitBounds(dmbounds);
-        const { AdvancedMarkerElement } = google.maps.marker;
 
         deliveryMan.forEach(dm => {
             if (dm.lat) {
@@ -552,7 +549,7 @@
                 activeIconContent.style.height = '100%';
                 activeIconContent.style.borderRadius = '50%';
 
-                const marker = new AdvancedMarkerElement({
+                const marker = new google.maps.Marker({
                     position: point,
                     map: map,
                     title: dm.image,
@@ -596,20 +593,17 @@
             lng: {{ $default_location ? $default_location['lng'] : '90.360587' }}
             };
         var riderBounds = new google.maps.LatLngBounds(null);
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
 
         var myOptions = {
             zoom: 13,
             center: myLatlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapId: mapId,
         }
         var riderData = <?php echo json_encode($rider_data['map_riders'] ?? []); ?>;
         riderMap = new google.maps.Map(document.getElementById("rider-map-canvas"), myOptions);
 
         var infowindow = new google.maps.InfoWindow();
 
-        const { AdvancedMarkerElement } = google.maps.marker;
 
         riderData.forEach(rider => {
             if (rider.lat) {
@@ -623,7 +617,7 @@
                 activeIconContent.style.height = '100%';
                 activeIconContent.style.borderRadius = '50%';
 
-                const marker = new AdvancedMarkerElement({
+                const marker = new google.maps.Marker({
                     position: point,
                     map: riderMap,
                     title: rider.image,

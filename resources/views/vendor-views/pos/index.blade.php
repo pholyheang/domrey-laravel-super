@@ -267,7 +267,6 @@
 
 
         function initMap() {
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
 
             let map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 13,
@@ -275,7 +274,6 @@
                     lat: {{ $store_data ? $store_data['latitude'] : '23.757989' }},
                     lng: {{ $store_data ? $store_data['longitude'] : '90.360587' }}
                 },
-                mapId: mapId
             });
 
             let zonePolygon = null;
@@ -340,11 +338,10 @@
 
                     document.getElementById('latitude').value = place.geometry.location.lat();
                     document.getElementById('longitude').value = place.geometry.location.lng();
-                    const { AdvancedMarkerElement } = google.maps.marker;
 
                     // Create a marker for each place.
                     markers.push(
-                        new AdvancedMarkerElement({
+                        new google.maps.Marker({
                             map,
                             title: place.name,
                             position: place.geometry.location,

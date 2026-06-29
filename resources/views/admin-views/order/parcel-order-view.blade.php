@@ -1790,7 +1790,6 @@
 
         var deliveryMan = <?php echo json_encode($deliveryMen); ?>;
         var map = null;
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
         var myLatlng = new google.maps.LatLng({{ $address['latitude'] }}, {{ $address['longitude'] }});
         var dmbounds = new google.maps.LatLngBounds(null);
         var locationbounds = new google.maps.LatLngBounds(null);
@@ -1801,7 +1800,6 @@
             center: myLatlng,
             zoom: 13,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapId: mapId,
 
             panControl: true,
             mapTypeControl: false,
@@ -1839,7 +1837,7 @@
                     activeIconContent.style.width = '100%';
                     activeIconContent.style.height = '100%';
                     activeIconContent.style.borderRadius = '50%';
-                    var marker = new google.maps.marker.AdvancedMarkerElement({
+                    var marker = new google.maps.Marker({
                         position: point,
                         map: map,
                         title: deliveryMan[i].location,
@@ -1868,7 +1866,6 @@
                     lat: {{ isset($order->store) ? $order->store->latitude : '23.757989' }},
                     lng: {{ isset($order->store) ? $order->store->longitude : '90.360587' }}
                 },
-                mapId: mapId,
             });
 
             let zonePolygon = null;
@@ -1936,7 +1933,7 @@
 
                     // Create a marker for each place.
                     markers.push(
-                        new google.maps.marker.AdvancedMarkerElement({
+                        new google.maps.Marker({
                             map,
                             title: place.name,
                             position: place.geometry.location,
@@ -1993,7 +1990,7 @@
                     activeIconContent.style.width = '100%';
                     activeIconContent.style.height = '100%';
                     activeIconContent.style.borderRadius = '50%';
-                    var marker = new google.maps.marker.AdvancedMarkerElement({
+                    var marker = new google.maps.Marker({
                         position: new google.maps.LatLng({{ $address['latitude'] }},
                             {{ $address['longitude'] }}),
                         map: map,
@@ -2018,7 +2015,7 @@
                     activeIconContent.style.width = '100%';
                     activeIconContent.style.height = '100%';
                     activeIconContent.style.borderRadius = '50%';
-                    var dmmarker = new google.maps.marker.AdvancedMarkerElement({
+                    var dmmarker = new google.maps.Marker({
                         position: new google.maps.LatLng({{ $order->dm_last_location['latitude'] }},
                             {{ $order->dm_last_location['longitude'] }}),
                         map: map,
@@ -2039,7 +2036,7 @@
 
 
                 @if (isset($receiver_details))
-                    var Receivermarker = new google.maps.marker.AdvancedMarkerElement({
+                    var Receivermarker = new google.maps.Marker({
                         position: new google.maps.LatLng({{ $receiver_details['latitude'] }},
                             {{ $receiver_details['longitude'] }}),
                         map: map,

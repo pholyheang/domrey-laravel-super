@@ -2661,7 +2661,6 @@
     <script>
         var deliveryMan = <?php echo json_encode($deliveryMen); ?>;
         var map = null;
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
         @if ($order->order_type == 'parcel')
         var myLatlng = new google.maps.LatLng({{ $address['latitude'] }}, {{ $address['longitude'] }});
         @else
@@ -2680,7 +2679,6 @@
             center: myLatlng,
             zoom: 13,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapId: mapId,
 
             panControl: true,
             mapTypeControl: false,
@@ -2711,7 +2709,7 @@
                 activeIconContent.style.width = '100%';
                 activeIconContent.style.height = '100%';
                 activeIconContent.style.borderRadius = '50%';
-            var Restaurantmarker = new google.maps.marker.AdvancedMarkerElement({
+            var Restaurantmarker = new google.maps.Marker({
                 map: map,
                 position: new google.maps.LatLng({{ $order->store->latitude }},
                     {{ $order->store->longitude }}),
@@ -2744,7 +2742,7 @@
                 activeIconContent.style.width = '100%';
                 activeIconContent.style.height = '100%';
                 activeIconContent.style.borderRadius = '50%';
-                    var marker = new google.maps.marker.AdvancedMarkerElement({
+                    var marker = new google.maps.Marker({
                         map: map,
                         position: point,
                         title: deliveryMan[i].location,
@@ -2770,7 +2768,6 @@
                     lat: {{ isset($order->store) ? $order->store->latitude : '23.757989' }},
                     lng: {{ isset($order->store) ? $order->store->longitude : '90.360587' }}
                 },
-                mapId: mapId,
             });
 
             let zonePolygon = null;
@@ -2836,7 +2833,7 @@
                     document.getElementById('latitude').value = place.geometry.location.lat();
                     document.getElementById('longitude').value = place.geometry.location.lng();
                     markers.push(
-                        new google.maps.marker.AdvancedMarkerElement({
+                        new google.maps.Marker({
                             map,
                             title: place.name,
                             position: place.geometry.location,
@@ -2930,7 +2927,7 @@
                 activeIconContent.style.width = '100%';
                 activeIconContent.style.height = '100%';
                 activeIconContent.style.borderRadius = '50%';
-                var marker = new google.maps.marker.AdvancedMarkerElement({
+                var marker = new google.maps.Marker({
                     map: map,
                     position: new google.maps.LatLng({{ $address['latitude'] }},
                         {{ $address['longitude'] }}),
@@ -2955,7 +2952,7 @@
                 activeIconContent.style.width = '100%';
                 activeIconContent.style.height = '100%';
                 activeIconContent.style.borderRadius = '50%';
-                var dmmarker = new google.maps.marker.AdvancedMarkerElement({
+                var dmmarker = new google.maps.Marker({
                     map: map,
                     position: new google.maps.LatLng({{ $order->dm_last_location['latitude'] }},
                         {{ $order->dm_last_location['longitude'] }}),
@@ -2982,7 +2979,7 @@
                 activeIconContent.style.width = '100%';
                 activeIconContent.style.height = '100%';
                 activeIconContent.style.borderRadius = '50%';
-                var Retaurantmarker = new google.maps.marker.AdvancedMarkerElement({
+                var Retaurantmarker = new google.maps.Marker({
                     map: map,
                     position: new google.maps.LatLng({{ $order->store->latitude }},
                         {{ $order->store->longitude }}),

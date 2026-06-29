@@ -320,8 +320,6 @@
 @endsection
 
 @push('script_2')
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initialize&libraries=drawing,places,marker&v=3.61"></script>
 <script>
     "use strict";
     $(".popover-wrapper").click(function () {
@@ -431,114 +429,102 @@
         });
     }
 
-    function initialize() {
-        @php($default_location = \App\Models\BusinessSetting::where('key', 'default_location')->first())
-        @php($default_location = $default_location->value ? json_decode($default_location->value, true) : 0)
-        let myLatlng = { lat: {{$default_location ? $default_location['lat'] : '23.757989'}}, lng: {{$default_location ? $default_location['lng'] : '90.360587'}} };
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
+    async function initialize() {
+        try {
+            @php($default_location = \App\Models\BusinessSetting::where('key', 'default_location')->first())
+            @php($default_location = $default_location->value ? json_decode($default_location->value, true) : 0)
+            let myLatlng = { lat: {{$default_location ? $default_location['lat'] : '11.5557863'}}, lng: {{$default_location ? $default_location['lng'] : '104.9274767'}} };
 
-        let myOptions = {
-            zoom: 13,
-            center: myLatlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapId: mapId
+            const [
+                { Map, MapTypeId },
+                { ControlPosition, LatLngBounds },
+                { DrawingManager, OverlayType },
+                { SearchBox },
+                { Marker }
+            ] = await Promise.all([
+                google.maps.importLibrary("maps"),
+                google.maps.importLibrary("core"),
+                google.maps.importLibrary("drawing"),
+                google.maps.importLibrary("places"),
+                google.maps.importLibrary("marker"),
+            ]);
 
-        }
-        map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
-        drawingManager = new google.maps.drawing.DrawingManager({
-            drawingMode: google.maps.drawing.OverlayType.POLYGON,
-            drawingControl: true,
-            drawingControlOptions: {
-                position: google.maps.ControlPosition.TOP_CENTER,
-                drawingModes: [google.maps.drawing.OverlayType.POLYGON]
-            },
-            polygonOptions: {
-                editable: true
-            }
-        });
-        drawingManager.setMap(map);
+            let myOptions = {
+                zoom: 13,
+                center: myLatlng,
+                mapTypeId: MapTypeId.ROADMAP,
+            };
 
+            map = new Map(document.getElementById("map-canvas"), myOptions);
 
-        //get current location block
-        // infoWindow = new google.maps.InfoWindow();
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-                    map.setCenter(pos);
-                });
-        }
-
-        drawingManager.addListener("overlaycomplete", function (event) {
-            if (lastpolygon) {
-                lastpolygon.setMap(null);
-            }
-            $('#coordinates').val(event.overlay.getPath().getArray());
-            lastpolygon = event.overlay;
-            auto_grow();
-        });
-
-        const resetDiv = document.createElement("div");
-        resetMap(resetDiv, lastpolygon);
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(resetDiv);
-
-        // Create the search box and link it to the UI element.
-        const input = document.getElementById("pac-input");
-        const searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-        // Bias the SearchBox results towards current map's viewport.
-        map.addListener("bounds_changed", () => {
-            searchBox.setBounds(map.getBounds());
-        });
-        let markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener("places_changed", () => {
-            const places = searchBox.getPlaces();
-
-            if (places.length == 0) {
-                return;
-            }
-            // Clear out the old markers.
-            markers.forEach((marker) => {
-                marker.setMap(null);
-            });
-            markers = [];
-            // For each place, get the icon, name and location.
-            const bounds = new google.maps.LatLngBounds();
-            places.forEach((place) => {
-                if (!place.geometry || !place.geometry.location) {
-                    console.log("Returned place contains no geometry");
-                    return;
+            drawingManager = new DrawingManager({
+                drawingMode: OverlayType.POLYGON,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: ControlPosition.TOP_CENTER,
+                    drawingModes: [OverlayType.POLYGON]
+                },
+                polygonOptions: {
+                    editable: true
                 }
+            });
+            drawingManager.setMap(map);
 
-                const { AdvancedMarkerElement } = google.maps.marker;
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    map.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
+                });
+            }
 
-                // Create a marker for each place.
-                markers.push(
-                    new AdvancedMarkerElement({
+            drawingManager.addListener("overlaycomplete", function (event) {
+                if (lastpolygon) {
+                    lastpolygon.setMap(null);
+                }
+                $('#coordinates').val(event.overlay.getPath().getArray());
+                lastpolygon = event.overlay;
+                auto_grow();
+            });
+
+            const resetDiv = document.createElement("div");
+            resetMap(resetDiv, lastpolygon);
+            map.controls[ControlPosition.TOP_CENTER].push(resetDiv);
+
+            const input = document.getElementById("pac-input");
+            const searchBox = new SearchBox(input);
+            map.controls[ControlPosition.TOP_CENTER].push(input);
+
+            map.addListener("bounds_changed", () => {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            let markers = [];
+            searchBox.addListener("places_changed", () => {
+                const places = searchBox.getPlaces();
+                if (places.length == 0) { return; }
+                markers.forEach((marker) => { marker.setMap(null); });
+                markers = [];
+                const bounds = new LatLngBounds();
+                places.forEach((place) => {
+                    if (!place.geometry || !place.geometry.location) { return; }
+                    markers.push(new Marker({
                         map,
                         title: place.name,
                         position: place.geometry.location,
-                    })
-                );
-
-                if (place.geometry.viewport) {
-                    // Only geocodes have viewport.
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
+                    }));
+                    if (place.geometry.viewport) {
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
             });
-            map.fitBounds(bounds);
-        });
-    }
 
-    // initialize();
+            set_all_zones();
+        } catch (err) {
+            console.error('Google Maps initialization error:', err);
+        }
+    }
 
 
     function set_all_zones() {
@@ -562,7 +548,7 @@
         });
     }
     $(document).on('ready', function () {
-        set_all_zones();
+        // zones loaded inside initialize() after map is ready
     });
 
 
@@ -616,5 +602,9 @@
         lastpolygon.setMap(null);
         $('#coordinates').val(null);
     })
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&loading=async&libraries=drawing,places,marker&v=3.64" defer></script>
+<script defer>
+    window.addEventListener('load', function() { initialize(); });
 </script>
 @endpush
