@@ -141,7 +141,6 @@
 @endsection
 
 @push('script_2')
-<script src="https://maps.googleapis.com/maps/api/js?v=3.45.8&key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=drawing,places,marker&v=3.61"></script>
 <script>
     "use strict";
     auto_grow();
@@ -151,11 +150,10 @@
         element.style.height = (element.scrollHeight)+"px";
     }
 
-    let map; // Global declaration of the map
+    let map;
     let lat_longs = new Array();
     let drawingManager;
     let lastpolygon = null;
-    let bounds = new google.maps.LatLngBounds();
     let polygons = [];
 
 
@@ -190,144 +188,123 @@
         });
     }
 
-    function initialize() {
-        let myLatlng = new google.maps.LatLng({{trim(explode(' ',$zone->center)[1], 'POINT()')}}, {{trim(explode(' ',$zone->center)[0], 'POINT()')}});
-        const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
+    async function initialize() {
+        try {
+            const [
+                { Map, MapTypeId, Polygon },
+                { ControlPosition, LatLngBounds, Size, Point },
+                { DrawingManager, OverlayType },
+                { SearchBox },
+                { Marker }
+            ] = await Promise.all([
+                google.maps.importLibrary("maps"),
+                google.maps.importLibrary("core"),
+                google.maps.importLibrary("drawing"),
+                google.maps.importLibrary("places"),
+                google.maps.importLibrary("marker"),
+            ]);
 
-        let myOptions = {
-            zoom: 13,
-            center: myLatlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapId:mapId
-        };
-        map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+            let myLatlng = new google.maps.LatLng({{trim(explode(' ',$zone->center)[1], 'POINT()')}}, {{trim(explode(' ',$zone->center)[0], 'POINT()')}});
+            let bounds = new LatLngBounds();
 
-        const polygonCoords = [
-
-            @foreach($area['coordinates'] as $coords)
-             { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
-            @endforeach
-        ];
-
-        let zonePolygon = new google.maps.Polygon({
-            paths: polygonCoords,
-            strokeColor: "#050df2",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillOpacity: 0,
-        });
-
-        zonePolygon.setMap(map);
-
-        zonePolygon.getPaths().forEach(function(path) {
-            path.forEach(function(latlng) {
-                bounds.extend(latlng);
-                map.fitBounds(bounds);
+            map = new Map(document.getElementById("map-canvas"), {
+                zoom: 13,
+                center: myLatlng,
+                mapTypeId: MapTypeId.ROADMAP,
             });
-        });
 
+            const polygonCoords = [
+                @foreach($area['coordinates'] as $coords)
+                 { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
+                @endforeach
+            ];
 
-        drawingManager = new google.maps.drawing.DrawingManager({
-            drawingMode: google.maps.drawing.OverlayType.POLYGON,
-            drawingControl: true,
-            drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: [google.maps.drawing.OverlayType.POLYGON]
-            },
-            polygonOptions: {
-            editable: true
-            }
-        });
-        drawingManager.setMap(map);
+            let zonePolygon = new Polygon({
+                paths: polygonCoords,
+                strokeColor: "#050df2",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillOpacity: 0,
+            });
+            zonePolygon.setMap(map);
+            zonePolygon.getPaths().forEach(function(path) {
+                path.forEach(function(latlng) {
+                    bounds.extend(latlng);
+                    map.fitBounds(bounds);
+                });
+            });
 
-        google.maps.event.addListener(drawingManager, "overlaycomplete", function(event) {
-            let newShape = event.overlay;
-            newShape.type = event.type;
-        });
+            drawingManager = new DrawingManager({
+                drawingMode: OverlayType.POLYGON,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: ControlPosition.TOP_CENTER,
+                    drawingModes: [OverlayType.POLYGON]
+                },
+                polygonOptions: { editable: true }
+            });
+            drawingManager.setMap(map);
 
-        google.maps.event.addListener(drawingManager, "overlaycomplete", function(event) {
-            if(lastpolygon)
-                {
-                    lastpolygon.setMap(null);
-                }
+            drawingManager.addListener("overlaycomplete", function(event) {
+                if (lastpolygon) { lastpolygon.setMap(null); }
                 $('#coordinates').val(event.overlay.getPath().getArray());
                 lastpolygon = event.overlay;
                 auto_grow();
-        });
-        const resetDiv = document.createElement("div");
-        resetMap(resetDiv, lastpolygon);
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(resetDiv);
+            });
 
-        // Create the search box and link it to the UI element.
-        const input = document.getElementById("pac-input");
-            const searchBox = new google.maps.places.SearchBox(input);
-            map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-            // Bias the SearchBox results towards current map's viewport.
+            const resetDiv = document.createElement("div");
+            resetMap(resetDiv, lastpolygon);
+            map.controls[ControlPosition.TOP_CENTER].push(resetDiv);
+
+            const input = document.getElementById("pac-input");
+            const searchBox = new SearchBox(input);
+            map.controls[ControlPosition.TOP_CENTER].push(input);
             map.addListener("bounds_changed", () => {
                 searchBox.setBounds(map.getBounds());
             });
+
             let markers = [];
-            // Listen for the event fired when the user selects a prediction and retrieve
-            // more details for that place.
             searchBox.addListener("places_changed", () => {
                 const places = searchBox.getPlaces();
-
-                if (places.length == 0) {
-                return;
-                }
-                // Clear out the old markers.
-                markers.forEach((marker) => {
-                marker.setMap(null);
-                });
+                if (places.length == 0) { return; }
+                markers.forEach((m) => { m.setMap(null); });
                 markers = [];
-                // For each place, get the icon, name and location.
-                const bounds = new google.maps.LatLngBounds();
+                const placeBounds = new LatLngBounds();
                 places.forEach((place) => {
-                if (!place.geometry || !place.geometry.location) {
-                    console.log("Returned place contains no geometry");
-                    return;
-                }
-                const icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25),
-                };
-                const { AdvancedMarkerElement } = google.maps.marker;
-
-                // Create a marker for each place.
-                markers.push(
-                    new AdvancedMarkerElement({
-                    map,
-                    icon,
-                    title: place.name,
-                    position: place.geometry.location,
-                    })
-                );
-
-                if (place.geometry.viewport) {
-                    // Only geocodes have viewport.
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
+                    if (!place.geometry || !place.geometry.location) { return; }
+                    const icon = {
+                        url: place.icon,
+                        size: new Size(71, 71),
+                        origin: new Point(0, 0),
+                        anchor: new Point(17, 34),
+                        scaledSize: new Size(25, 25),
+                    };
+                    markers.push(new Marker({
+                        map, icon,
+                        title: place.name,
+                        position: place.geometry.location,
+                    }));
+                    if (place.geometry.viewport) {
+                        placeBounds.union(place.geometry.viewport);
+                    } else {
+                        placeBounds.extend(place.geometry.location);
+                    }
                 });
-                map.fitBounds(bounds);
+                map.fitBounds(placeBounds);
             });
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
 
-    function set_all_zones()
-    {
+            set_all_zones();
+        } catch (err) {
+            console.error('Google Maps initialization error:', err);
+        }
+    }
+
+    function set_all_zones() {
         $.get({
             url: '{{route('admin.zone.zoneCoordinates')}}/{{$zone->id}}',
             dataType: 'json',
             success: function (data) {
-
-                console.log(data);
-                for(let i=0; i<data.length;i++)
-                {
+                for (let i = 0; i < data.length; i++) {
                     polygons.push(new google.maps.Polygon({
                         paths: data[i],
                         strokeColor: "#FF0000",
@@ -338,22 +315,23 @@
                     }));
                     polygons[i].setMap(map);
                 }
-
             },
         });
     }
-    $(document).on('ready', function(){
-        set_all_zones();
-        $("#zone_form").on('keydown', function(e){
-            if (e.keyCode === 13) {
-                e.preventDefault();
-            }
-        })
+
+    $(document).on('ready', function() {
+        $("#zone_form").on('keydown', function(e) {
+            if (e.keyCode === 13) { e.preventDefault(); }
+        });
     });
 
-    $('#reset_btn').click(function(){
+    $('#reset_btn').click(function() {
         location.reload(true);
-    })
+    });
 
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&loading=async&libraries=drawing,places,marker&v=3.64" defer></script>
+<script defer>
+    window.addEventListener('load', function() { initialize(); });
 </script>
 @endpush
