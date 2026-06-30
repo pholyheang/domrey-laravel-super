@@ -22,7 +22,7 @@
 
     $previewStore = $store;
     $previewStoreName = $previewStore?->name ?? '';
-    $previewStoreLogo = $previewStore?->logo_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg');
+    $previewStoreLogo = $previewStore?->logo_full_url ?? asset('/assets/admin/img/160x160/img2.jpg');
 @endphp
 
 <input type="hidden" name="store_id" value="{{ $selectedStoreId }}">
@@ -94,7 +94,7 @@
                                 <input type="file" hidden accept="{{ IMAGE_EXTENSION }}" name="thumbnail">
 
                                 <div class="upload-placeholder text-center" style="{{ $reel->thumbnail_full_url ? 'display:none;' : '' }}">
-                                    <img src="{{ asset('public/assets/admin/img/reels/img-icon.png') }}" alt="">
+                                    <img src="{{ asset('/assets/admin/img/reels/img-icon.png') }}" alt="">
                                     <div><span class="text-info">{{ translate('messages.Click_to_upload') }}</span><br>{{ translate('messages.or_drag_and_drop') }}</div>
                                 </div>
                                 <div class="upload-wrapper img-upload-wrapper" style="display: {{ $reel->thumbnail_full_url ? 'block' : 'none' }};">
@@ -117,7 +117,7 @@
                             <div class="reel-upload-box {{ $reel->video_full_url ? 'active' : '' }}" data-type="video" data-max-size="{{ $reelVideoMaxSizeMb }}" data-max-duration-seconds="{{ $reelMaxDurationSeconds }}" data-max-duration-label="{{ $reelMaxDuration }} {{ $reelDurationUnitLabel }}" data-original-thumbnail="{{ $reel->thumbnail_full_url ?? $previewStoreLogo }}" data-original-video="{{ $reel->video_full_url ?? '' }}" data-original-video-name="{{ $reel->video ? basename($reel->video) : '' }}" data-original-video-type="{{ $reel->video ? strtoupper(pathinfo($reel->video, PATHINFO_EXTENSION)) : '' }}">
                                 <input type="file" hidden accept="video/*" name="video">
                                 <div class="upload-placeholder text-center" style="{{ $reel->video_full_url ? 'display:none;' : '' }}">
-                                    <img src="{{ asset('public/assets/admin/img/reels/video-icon.png') }}" alt="">
+                                    <img src="{{ asset('/assets/admin/img/reels/video-icon.png') }}" alt="">
                                     <div><span class="text-info">{{ translate('messages.Add_Video') }}</span></div>
                                 </div>
                                 <div class="upload-wrapper reel-upload-wrapper" style="display: {{ $reel->video_full_url ? 'block' : 'none' }};">

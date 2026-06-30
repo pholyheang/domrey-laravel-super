@@ -22,7 +22,7 @@
 
     $previewStore = $reel->store ?? $stores->firstWhere('id', $selectedStoreId);
     $previewStoreName = $previewStore?->name ?? '';
-    $previewStoreLogo = $previewStore?->logo_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg');
+    $previewStoreLogo = $previewStore?->logo_full_url ?? asset('/assets/admin/img/160x160/img2.jpg');
     $storeLabel = \App\CentralLogics\Helpers::getStoreLabelByModuleType(config('module.current_module_type'));
     $selectStoreLabel = translate('messages.select') . ' ' . $storeLabel;
 @endphp
@@ -113,7 +113,7 @@
                                 <input type="file" hidden accept="{{ IMAGE_EXTENSION }}" name="thumbnail">
 
                                 <div class="upload-placeholder text-center" style="{{ $reel->thumbnail_full_url ? 'display:none;' : '' }}">
-                                    <img src="{{ asset('public/assets/admin/img/reels/img-icon.png') }}" alt="">
+                                    <img src="{{ asset('/assets/admin/img/reels/img-icon.png') }}" alt="">
                                     <div>
                                         <span class="text-info">{{ translate('messages.Click_to_upload') }}</span>
                                         <br>
@@ -148,7 +148,7 @@
                                 <input type="file" hidden accept="video/*" name="video">
 
                                 <div class="upload-placeholder text-center" style="{{ $reel->video_full_url ? 'display:none;' : '' }}">
-                                    <img src="{{ asset('public/assets/admin/img/reels/video-icon.png') }}" alt="">
+                                    <img src="{{ asset('/assets/admin/img/reels/video-icon.png') }}" alt="">
                                     <div>
                                         <span class="text-info">{{ translate('messages.Add_Video') }}</span>
                                     </div>

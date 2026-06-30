@@ -445,7 +445,7 @@
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <img src="{{ asset('Modules/TaxModule/public/assets/admin/img/status-ons.png') }}" class="mb-20"
+                    <img src="{{ asset('Modules/TaxModule//assets/admin/img/status-ons.png') }}" class="mb-20"
                         alt="">
                     <h3 class="title-clr mb-2" id="confirmationTitle"></h3>
                     <p class="fz--14px" id="confirmationMessage"></p>
@@ -499,7 +499,7 @@
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
                                             <li class="fs-12 color-656566">{{translate('Whether tax should be included in the product price or added separately')}}</li>
                                             <li class="fs-12 color-656566">{{translate('Which parts of the order should have taxes applied — items, delivery fees, or packaging')}}</li>
-                                            <li class="fs-12 color-656566">{{translate('This gives you full control over how your business handles tax visibility and accuracy.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('This gives you full control over how your business handles tax visibility and accuracy.')}}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -516,10 +516,10 @@
                                 </button>
                             </div>
                             <div class="collapse mt-3" id="collapseGeneralSetup_032">
-                                <div class="card rounded border p-3 card-body"> 
+                                <div class="card rounded border p-3 card-body">
                                     <div class="mb-3">
                                         <p class="m-0 color-656566 fs-12">{{translate('You can choose one of two ways to calculate tax:')}}</p>
-                                    </div>                               
+                                    </div>
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('Calculate Tax Included in Product Price')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
@@ -554,24 +554,24 @@
                                 </button>
                             </div>
                             <div class="collapse mt-3" id="collapseGeneralSetup_033">
-                                <div class="card rounded border p-3 card-body"> 
-                                    <p class="fs-12 mb-3 color-656566">The system applies tax only to orders placed after you enable it.</p>  
+                                <div class="card rounded border p-3 card-body">
+                                    <p class="fs-12 mb-3 color-656566">The system applies tax only to orders placed after you enable it.</p>
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('Before activation:')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('Orders placed earlier will not have any tax added.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('Orders placed earlier will not have any tax added.')}}</li>
                                         </ul>
                                     </div>
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('After activation:')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('All new orders will automatically calculate and apply the correct tax.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('All new orders will automatically calculate and apply the correct tax.')}}</li>
                                         </ul>
                                     </div>
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('After deactivation:')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('If you turn off tax again, future orders will not include tax until reactivated.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('If you turn off tax again, future orders will not include tax until reactivated.')}}</li>
                                         </ul>
                                     </div>
                                     <p class="m-0 fs-12 color-656566">
@@ -591,24 +591,24 @@
                                 </button>
                             </div>
                             <div class="collapse mt-3" id="collapseGeneralSetup_044">
-                                <div class="card rounded border p-3 card-body"> 
-                                    <p class="fs-12 mb-3 color-656566">You can choose how the tax applies depending on your business model:</p>  
+                                <div class="card rounded border p-3 card-body">
+                                    <p class="fs-12 mb-3 color-656566">You can choose how the tax applies depending on your business model:</p>
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('Order-wise Tax:')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('One flat tax rate applies to the total order.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('One flat tax rate applies to the total order.')}}</li>
                                         </ul>
                                     </div>
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('Product-wise Tax: ')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('Each product or food item can have its own tax rate.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('Each product or food item can have its own tax rate.')}}</li>
                                         </ul>
                                     </div>
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('Category-wise Tax: ')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('Different product categories can carry different tax rates.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('Different product categories can carry different tax rates.')}}</li>
                                         </ul>
                                     </div>
                                     <p class="m-0 fs-12 color-656566">
@@ -628,11 +628,11 @@
                                 </button>
                             </div>
                             <div class="collapse mt-3" id="collapseGeneralSetup_055">
-                                <div class="card rounded border p-3 card-body"> 
+                                <div class="card rounded border p-3 card-body">
                                     <div class="mb-3">
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('For pharmacy modules, tax applies order-wise on uploaded prescription orders.')}}</li>                                            
-                                            <li class="fs-12 color-656566">{{translate('You can set the tax type and rate specifically for these orders.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('For pharmacy modules, tax applies order-wise on uploaded prescription orders.')}}</li>
+                                            <li class="fs-12 color-656566">{{translate('You can set the tax type and rate specifically for these orders.')}}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -649,11 +649,11 @@
                                 </button>
                             </div>
                             <div class="collapse mt-3" id="collapseGeneralSetup_066">
-                                <div class="card rounded border p-3 card-body"> 
+                                <div class="card rounded border p-3 card-body">
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('You can also configure tax for packaging charges.')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('If enabled, packaging costs will include tax as per your setup — ensuring your total billing remains compliant.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('If enabled, packaging costs will include tax as per your setup — ensuring your total billing remains compliant.')}}</li>
                                         </ul>
                                     </div>
                                     <p class="m-0 fs-12 color-656566">
@@ -673,12 +673,12 @@
                                 </button>
                             </div>
                             <div class="collapse mt-3" id="collapseGeneralSetup_077">
-                                <div class="card rounded border p-3 card-body"> 
+                                <div class="card rounded border p-3 card-body">
                                     <div class="mb-3">
                                         <h6 class="mb-2 fs-12 color-656566">{{translate('After completing all configurations:')}}</h6>
                                         <ul class="mb-0 list-group pl-3 d-flex flex-column gap-1px">
-                                            <li class="fs-12 color-656566">{{translate('Click Save Information to apply changes.')}}</li>                                            
-                                            <li class="fs-12 color-656566">{{translate('Click Reset if you want to start over or discard unsaved edits.')}}</li>                                            
+                                            <li class="fs-12 color-656566">{{translate('Click Save Information to apply changes.')}}</li>
+                                            <li class="fs-12 color-656566">{{translate('Click Reset if you want to start over or discard unsaved edits.')}}</li>
                                         </ul>
                                     </div>
                                     <p class="m-0 fs-12 color-656566">

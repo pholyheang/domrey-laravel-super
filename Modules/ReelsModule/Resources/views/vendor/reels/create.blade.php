@@ -6,7 +6,7 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('public/assets/admin/vendor/daterangepicker/daterangepicker.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/admin/vendor/daterangepicker/daterangepicker.css') }}"/>
 @endpush
 
 @section('content')
@@ -21,8 +21,8 @@
 @endsection
 
 @push('script_2')
-    <script type="text/javascript" src="{{ asset('public/assets/admin/js/moment.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('public/assets/admin/js/daterangepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/assets/admin/js/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/assets/admin/js/daterangepicker.min.js') }}"></script>
     <script>
         "use strict";
         function initReelDateRange() {

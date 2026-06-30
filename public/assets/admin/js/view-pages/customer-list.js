@@ -23,7 +23,7 @@ $("#customFileEg1").change(function () {
 
 $('#reset_btn').click(function(){
     $('#module_id').val(null).trigger('change');
-    $('#viewer').attr('src', "{{asset('public/assets/admin/img/900x400/img1.jpg')}}");
+    $('#viewer').attr('src', "{{asset('/assets/admin/img/900x400/img1.jpg')}}");
 })
 $(document).on('ready', function() {
 

@@ -168,8 +168,8 @@
                                         <td>
                                             <a class="media align-items-center min-w-300px overflow-hidden" href="javascript:;">
                                                 <img class="avatar h-160px w-100px mr-3 onerror-image"
-                                                    src="{{ $reel->thumbnail_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" alt="">
+                                                    src="{{ $reel->thumbnail_full_url ?? asset('/assets/admin/img/160x160/img2.jpg') }}"
+                                                    data-onerror-image="{{ asset('/assets/admin/img/160x160/img2.jpg') }}" alt="">
                                                 <div class="media-body" title="{{ $reel->description }}">
                                                     <div class="text-title text-wrap line--limit-2 min-w-160 max-w-200px mb-0">
                                                         {{ $reel->description }}
@@ -180,8 +180,8 @@
                                         <td>
                                             <div class="d-flex align-items-center flex-nowrap min-w-220 overflow-hidden" title="{{ $reel->store?->name }}">
                                                 <img class="avatar avatar-lg rounded-circle border onerror-image flex-shrink-0"
-                                                    src="{{ $reel->store?->logo_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" alt="">
+                                                    src="{{ $reel->store?->logo_full_url ?? asset('/assets/admin/img/160x160/img2.jpg') }}"
+                                                    data-onerror-image="{{ asset('/assets/admin/img/160x160/img2.jpg') }}" alt="">
                                                 <div class="ml-3">
                                                     @if ($reel->store)
                                                         <a href="{{ route('admin.store.view', $reel->store->id) }}" class="text-wrap line--limit-1 min-w-160 max-w-200px mb-0 text-title d-inline-block">
@@ -214,8 +214,8 @@
                                             <label class="toggle-switch toggle-switch-sm" for="reelStatus{{ $reel->id }}">
                                                 <input type="checkbox"
                                                     data-id="reelStatus{{ $reel->id }}"
-                                                    data-image-on="{{ asset('public/assets/admin/img/modal/reel-stratus-on.png') }}"
-                                                    data-image-off="{{ asset('public/assets/admin/img/modal/reel-stratus-off.png') }}"
+                                                    data-image-on="{{ asset('/assets/admin/img/modal/reel-stratus-on.png') }}"
+                                                    data-image-off="{{ asset('/assets/admin/img/modal/reel-stratus-off.png') }}"
                                                     data-title-on="{{ translate('messages.want_to_turn_on_the_reel?') }}"
                                                     data-title-off="{{ translate('messages.want_to_turn_off_the_reel?') }}"
                                                     data-text-on="<p>{{ translate('messages.if_you_turn_on_the_reel,_it_will_be_visible_to_customers.') }}</p>"
@@ -264,7 +264,7 @@
                                                             <div class="modal-body pb-4 pt-0">
                                                                 <div class="max-349 mx-auto mt-2 mb-20">
                                                                     <div class="text-center">
-                                                                    <img src="{{ asset('public/assets/admin/img/delete.png') }}" alt="icon" class="mb-20">
+                                                                    <img src="{{ asset('/assets/admin/img/delete.png') }}" alt="icon" class="mb-20">
                                                                     <h3 class="mb-2 fs-18">{{ translate('messages.Want_to_delete_this_Reel') }}</h3>
                                                                     <p class="text-wrap mb-0">
                                                                         @if ($reel->reel_status_label == 'live')
@@ -293,7 +293,7 @@
                                     <tr>
                                         <td colspan="11">
                                             <div class="empty--data">
-                                                <img src="{{ asset('public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                                                <img src="{{ asset('/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                                                 <h5>{{ translate('messages.no_data_found') }}</h5>
                                             </div>
                                         </td>
@@ -453,7 +453,7 @@
                 <div class="p-3">
                     <div class="d-flex justify-content-center align-items-center mb-3">
                         <div class="reels-video-wrapper">
-                            <img src="{{ $reel->thumbnail_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg') }}" alt="" class="reels-thumbnail">
+                            <img src="{{ $reel->thumbnail_full_url ?? asset('/assets/admin/img/160x160/img2.jpg') }}" alt="" class="reels-thumbnail">
                             <video class="reels-video" width="400" height="470" preload="none" controls>
                                 <source src="{{ $reel->video_full_url }}" type="video/mp4">
                                 {{ translate('messages.Your_browser_does_not_support_the_video_tag.') }}
@@ -497,7 +497,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <h4 class="d-flex gap-1 mb-2"><i class="tio-shop"></i> {{ translate('messages.Vendor_Information') }}</h4>
                         <div class="d-flex gap-2 align-items-center">
-                            <img class="avatar avatar-70 border onerror-image" src="{{ $reel->store?->logo_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg') }}">
+                            <img class="avatar avatar-70 border onerror-image" src="{{ $reel->store?->logo_full_url ?? asset('/assets/admin/img/160x160/img2.jpg') }}">
                             <div class="flex-grow-1">
                                 <h5 class="mb-1">{{ $reel->store?->name ?? $deletedStoreLabel }}</h5>
                                 <h6 class="mb-1">{{ $reel->store?->phone ?? '' }}</h6>
@@ -531,7 +531,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{ asset('public/assets/admin/vendor/apex/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin/vendor/apex/apexcharts.min.js') }}"></script>
     <script>
         "use strict";
 

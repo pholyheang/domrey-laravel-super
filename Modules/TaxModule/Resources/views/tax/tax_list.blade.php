@@ -54,14 +54,14 @@
                                 <a id="export-excel" class="dropdown-item"
                                     href="{{ route('taxvat.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('Modules/TaxModule/public/assets/admin/img/excel.svg') }}"
+                                        src="{{ asset('Modules/TaxModule//assets/admin/img/excel.svg') }}"
                                         alt="Image Description">
                                     {{ translate('messages.excel') }}
                                 </a>
                                 <a id="export-csv" class="dropdown-item"
                                     href="{{ route('taxvat.export', ['type' => 'csv', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('Modules/TaxModule/public/assets/admin/img/placeholder-csv-format.svg') }}"
+                                        src="{{ asset('Modules/TaxModule//assets/admin/img/placeholder-csv-format.svg') }}"
                                         alt="Image Description">
                                     {{ translate('messages.csv') }}
                                 </a>
@@ -134,7 +134,7 @@
             @else
                 <div class="bg--F6F6F6 tax-error__table w-100 h225-vh py-5">
                     <div class="max-349 text-center mx-auto my-5">
-                        <img src="{{ asset('Modules/TaxModule/public/assets/admin/img/tax-error.png') }}" alt="img"
+                        <img src="{{ asset('Modules/TaxModule//assets/admin/img/tax-error.png') }}" alt="img"
                             class="mb-20">
                         <h4 class="mb-2">{{ translate('Currently you don’t have any Tax') }}</h4>
                         <p class="mb-20">
@@ -310,7 +310,7 @@
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <img src="{{ asset('Modules/TaxModule/public/assets/admin/img/status-ons.png') }}" class="mb-20"
+                    <img src="{{ asset('Modules/TaxModule//assets/admin/img/status-ons.png') }}" class="mb-20"
                         alt="">
                     <h3 class="title-clr mb-2" id="confirmationTitle"></h3>
                     <p class="fz--14px" id="confirmationMessage"></p>

@@ -186,8 +186,8 @@
                                         </label>
                                         <label class="upload-img-3 m-0 d-block">
                                             <div class="img">
-                                                <img src="{{asset("/public/assets/admin/img/aspect-1.png")}}"
-                                                data-onerror-image="{{asset("/public/assets/admin/img/aspect-1.png")}}" class="img__aspect-1 min-w-187px max-w-187px onerror-image" alt="">
+                                                <img src="{{asset("/assets/admin/img/aspect-1.png")}}"
+                                                data-onerror-image="{{asset("/assets/admin/img/aspect-1.png")}}" class="img__aspect-1 min-w-187px max-w-187px onerror-image" alt="">
                                             </div>
                                             <input accept="{{IMAGE_EXTENSION}}" class="upload-file__input single_file_input" type="file"  name="reviewer_image" hidden="">
                                         </label>
@@ -205,7 +205,7 @@
                                         </label>
                                         <label class="upload-img-4 m-0 d-block my-auto">
                                             <div class="img">
-                                                <img src="{{asset("/public/assets/admin/img/aspect-3-1.png")}}" data-onerror-image="{{asset("/public/assets/admin/img/aspect-3-1.png")}}" class="vertical-img max-w-187px onerror-image" alt="">
+                                                <img src="{{asset("/assets/admin/img/aspect-3-1.png")}}" data-onerror-image="{{asset("/assets/admin/img/aspect-3-1.png")}}" class="vertical-img max-w-187px onerror-image" alt="">
                                             </div>
                                             <input accept="{{IMAGE_EXTENSION}}" class="upload-file__input single_file_input" type="file" id="image-upload-2" name="company_image" hidden="">
                                         </label>

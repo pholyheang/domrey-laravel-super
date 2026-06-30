@@ -32,8 +32,8 @@
                             </span>
                             <input type="checkbox" data-id="vendor_can_upload_reels"
                                 data-type="toggle"
-                                data-image-on="{{ asset('/public/assets/admin/img/modal/store-reg-on.png') }}"
-                                data-image-off="{{ asset('/public/assets/admin/img/modal/store-reg-off.png') }}"
+                                data-image-on="{{ asset('/assets/admin/img/modal/store-reg-on.png') }}"
+                                data-image-off="{{ asset('/assets/admin/img/modal/store-reg-off.png') }}"
                                 data-title-on="<strong>{{ translate('Want to enable vendor reels upload?') }}</strong>"
                                 data-title-off="<strong>{{ translate('Want to disable vendor reels upload?') }}</strong>"
                                 data-text-on="<p>{{ translate('If enabled, vendors will be able to create and upload reels on the platform.') }}</p>"
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-12">
                     <div class="bg-opacity-warning-10 px-3 py-2 rounded fz-11  gap-2 align-items-center d-flex ">
-                        <img src="{{asset('public/assets/admin/img/info-idea.svg')}}" alt="">
+                        <img src="{{asset('/assets/admin/img/info-idea.svg')}}" alt="">
                         <span>
                             {{translate('The upload size limit depends entirely on the server’s file upload configuration settings. Based on those settings, you should configure the Max Upload Size accordingly.')}}
                         </span>
