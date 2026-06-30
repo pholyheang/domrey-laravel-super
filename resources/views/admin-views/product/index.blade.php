@@ -180,7 +180,7 @@
 @push('script_2')
     @include('admin-views.product.partials._shared-script-assets', [
         'moduleType' => Config::get('module.current_module_type'),
-        'viewPageScript' => 'public/assets/admin/js/view-pages/product-index.js',
+        'viewPageScript' => '/assets/admin/js/view-pages/product-index.js',
     ])
 
 

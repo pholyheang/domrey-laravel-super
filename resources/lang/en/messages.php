@@ -11569,4 +11569,8 @@ Smartly or Earn. ',
   'want_to_Turn_ON_the_Vendor_App_addon?' => 'Want to Turn ON the Vendor App addon?',
   'want_to_disabled_this_ ReelsModule' => 'Want to disabled this  ReelsModule',
   'This provider does not have much available data.' => 'This provider does not have much available data.',
+  'Pharmacy Category' => 'Pharmacy Category',
+  'Testing Food' => 'Testing Food',
+  'Dommrey Testing 4' => 'Dommrey Testing 4',
+  'Domrey Supermarket' => 'Domrey Supermarket',
 );

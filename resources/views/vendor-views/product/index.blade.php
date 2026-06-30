@@ -128,7 +128,7 @@
 @push('script_2')
     @include('admin-views.product.partials._shared-script-assets', [
         'moduleType' => $module_type,
-        'viewPageScript' => 'public/assets/admin/js/view-pages/vendor/product-index.js',
+        'viewPageScript' => '/assets/admin/js/view-pages/vendor/product-index.js',
     ])
 
 
