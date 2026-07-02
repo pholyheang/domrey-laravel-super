@@ -1115,8 +1115,8 @@ body.page-scrolled .main-nav {
   align-items: center;
   gap: 8px;
   padding: 9px 16px;
-  background: var(--title);
-  color: #fff;
+  background: #fff;
+  color: #131416;
   border-radius: var(--radius);
   font-size: .8rem;
   transition: .3s var(--ease);
@@ -1126,7 +1126,7 @@ body.page-scrolled .main-nav {
 .app-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, .12);
-  color: #fff
+  /* color: #fff */
 }
 
 .app-btn img {
@@ -1396,7 +1396,7 @@ body.page-scrolled .main-nav {
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 6px;
-  color: #fff
+  color: #131416
 }
 
 
@@ -1409,7 +1409,8 @@ body.page-scrolled .main-nav {
   font-size: .84rem;
   font-weight: 700;
   background: #fff;
-  color: var(--green);
+  /* color: var(--green); */
+  color: #131416;
   margin-bottom: 12px;
   transition: .3s var(--ease)
 }
@@ -1433,7 +1434,7 @@ body.page-scrolled .main-nav {
   background: rgba(255, 255, 255, .15);
   border: 1.5px solid rgba(255, 255, 255, .3);
   border-radius: var(--radius);
-  color: #fff;
+  color: #131416;
   font-size: .82rem;
   transition: .3s var(--ease);
   text-align: left

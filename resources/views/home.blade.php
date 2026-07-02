@@ -350,13 +350,13 @@
                     <div class="cta-app-row">
                         @if (isset($landing_page_links['playstore_url_status']) && $landing_page_links['playstore_url_status'] == '1')
                         <a href="{{ $landing_page_links['playstore_url'] }}" class="cta-app-link">
-                            <img src="{{ asset('/assets/landing/img/google-play.png') }}" alt="Google Play" style="filter:brightness(10)" />
+                            <img src="{{ asset('/assets/landing/img/google-play.png') }}" alt="Google Play"  />
                             <span class="cal-text"><span class="cal-sm">{{ translate('Get it on') }}</span><span class="cal-lg">{{ translate('Google Play') }}</span></span>
                         </a>
                         @endif
                         @if (isset($landing_page_links['apple_store_url_status']) && $landing_page_links['apple_store_url_status'] == '1')
                         <a href="{{ $landing_page_links['apple_store_url'] }}" class="cta-app-link">
-                            <img src="{{ asset('/assets/landing/img/apple-store.png') }}" alt="Apple Store" style="filter:brightness(10)" />
+                            <img src="{{ asset('/assets/landing/img/apple-store.png') }}" alt="Apple Store" />
                             <span class="cal-text"><span class="cal-sm">{{ translate('Download on the') }}</span><span class="cal-lg">{{ translate('Apple Store') }}</span></span>
                         </a>
                         @endif

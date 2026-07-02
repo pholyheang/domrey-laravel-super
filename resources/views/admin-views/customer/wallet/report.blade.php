@@ -430,7 +430,7 @@
             dataLabels: {
                 enabled: false,
                 style: {
-                    colors: ['#0F4A4A', '#3F6E6E', '#6F9292', '#9FB7B7', '#b9e0e0, #d6e8e8', '#f1f9f9']
+                    colors: ['#FEC404', '#EBAF00', '#C99700', '#E8B800', '#FFE680', '#FFF3B0']
                 }
             },
             // responsive: [{
@@ -443,7 +443,7 @@
             // }],
             colors: ['rgba(0, 0, 0, 0.90)'],
             fill: {
-                colors: ['#0F4A4A', '#3F6E6E', '#6F9292', '#9FB7B7']
+                colors: ['#FEC404', '#EBAF00', '#C99700', '#E8B800']
             },
             legend: {
                 show: false

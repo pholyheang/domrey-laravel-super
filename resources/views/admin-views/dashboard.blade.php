@@ -390,7 +390,7 @@
             dataLabels: {
                 enabled: false,
                 style: {
-                    colors: ['#005555', '#00aa96', '#b9e0e0',]
+                    colors: ['#FEC404', '#EBAF00', '#C99700',]
                 }
             },
             responsive: [{
@@ -401,9 +401,9 @@
                     },
                 }
             }],
-            colors: ['#005555','#00aa96', '#111'],
+            colors: ['#FEC404','#EBAF00', '#C99700'],
             fill: {
-                colors: ['#005555','#00aa96', '#b9e0e0']
+                colors: ['#FEC404','#EBAF00', '#C99700']
             },
             legend: {
                 show: false
@@ -434,7 +434,7 @@
         },
         fill: {
             type: 'gradient',
-            colors: ['#76ffcd'],
+            colors: ['#FEC404'],
         },
         xaxis: {
         //   type: 'datetime',
