@@ -173,7 +173,7 @@
         }
 
         footer a {
-            color: #000000;
+            color: #131416;
             text-decoration: none;
         }
         .table-2{
