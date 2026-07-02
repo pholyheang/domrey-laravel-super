@@ -43,9 +43,9 @@ class SocialAuthController extends Controller
         try {
             if ($request['medium'] == 'google') {
 
-                if($request->id_token  == true){
+                if ($request->id_token  == true) {
                     $res = $client->request('GET', 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' . $token);
-                } else{
+                } else {
                     $res = $client->request('GET',  'https://www.googleapis.com/oauth2/v3/userinfo?access_token=' . $token);
                 }
 
@@ -60,9 +60,9 @@ class SocialAuthController extends Controller
                 ];
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'wrong credential.','message'=>$e->getMessage()],403);
+            return response()->json(['error' => 'wrong credential.', 'message' => $e->getMessage()], 403);
         }
-        if($request['medium'] == 'apple'){
+        if ($request['medium'] == 'apple') {
             $fast_name = implode('@', explode('@', $data['email'], -1));
             $last_name = '';
 
@@ -73,7 +73,7 @@ class SocialAuthController extends Controller
 
                 //Check Exists Ref Code Condition
                 if ($check_duplicate_ref) {
-                    return response()->json(['errors'=>['code'=>'ref_code','message'=>'Referral code already used']]);
+                    return response()->json(['errors' => ['code' => 'ref_code', 'message' => 'Referral code already used']]);
                 } else {
                     $user = User::where('email', $data['email'])->where('temp_token', $unique_id)->first();
                     $user->phone = $request->phone;
@@ -105,14 +105,14 @@ class SocialAuthController extends Controller
 
 
                         $notification_data = [
-                            'title' => translate('messages.Your_referral_code_is_used_by').' '.$fast_name.' '.$last_name,
-                            'description' => translate('Be_prepare_to_receive_when_they_complete_there_first_purchase') ,
+                            'title' => translate('messages.Your_referral_code_is_used_by') . ' ' . $fast_name . ' ' . $last_name,
+                            'description' => translate('Be_prepare_to_receive_when_they_complete_there_first_purchase'),
                             'order_id' => '',
                             'image' => '',
                             'type' => 'referral_code',
                         ];
 
-                        if(Helpers::getNotificationStatusData('customer','customer_new_referral_join','push_notification_status') &&  $referar_user?->cm_firebase_token){
+                        if (Helpers::getNotificationStatusData('customer', 'customer_new_referral_join', 'push_notification_status') &&  $referar_user?->cm_firebase_token) {
                             Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
                             DB::table('user_notifications')->insert([
                                 'data' => json_encode($notification_data),
@@ -120,13 +120,10 @@ class SocialAuthController extends Controller
                                 'created_at' => now(),
                                 'updated_at' => now()
                             ]);
-
                         }
 
-                        $user->ref_by =$referar_user->id;
+                        $user->ref_by = $referar_user->id;
                         $user->save();
-
-
                     }
                 }
             } else {
@@ -141,40 +138,40 @@ class SocialAuthController extends Controller
                 'phone' => $user->phone,
                 'password' => $user->phone
             ];
-            $customer_verification = BusinessSetting::where('key','customer_verification')->first()->value;
-            $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
+            $customer_verification = BusinessSetting::where('key', 'customer_verification')->first()->value;
+            $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value ?? 0;
             if (auth()->attempt($data)) {
                 $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
-                if(!auth()->user()->status)
-                {
+                if (!auth()->user()->status) {
                     $errors = [];
                     array_push($errors, ['code' => 'auth-003', 'message' => translate('messages.your_account_is_blocked')]);
                     return response()->json([
                         'errors' => $errors
                     ], 403);
                 }
-                if($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && getEnvMode() != 'demo')
-                {
+                if ($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && getEnvMode() != 'demo') {
                     // $interval_time = BusinessSetting::where('key', 'otp_interval_time')->first();
                     // $otp_interval_time= isset($interval_time) ? $interval_time->value : 20;
-                    $otp_interval_time= 60; //seconds
-                    $phone_verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
-                    if(isset($phone_verification_data) &&  Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
-                        $time= $otp_interval_time - Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds();
+                    $otp_interval_time = 60; //seconds
+                    $phone_verification_data = DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+                    if (isset($phone_verification_data) &&  Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds() < $otp_interval_time) {
+                        $time = $otp_interval_time - Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds();
                         $errors = [];
-                        array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
+                        array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_') . $time . ' ' . translate('messages.seconds')]);
                         return response()->json([
                             'errors' => $errors
                         ], 405);
                     }
 
                     $otp = rand(100000, 999999);
-                    DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                    DB::table('phone_verifications')->updateOrInsert(
+                        ['phone' => $request['phone']],
                         [
-                        'token' => $otp,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                        ]);
+                            'token' => $otp,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]
+                    );
                     //for payment and sms gateway addon
 
                     try {
@@ -183,50 +180,48 @@ class SocialAuthController extends Controller
                             Mail::to($user?->getRawOriginal('email'))->send(new EmailVerification($otp, $user->email));
                             $mailResponse = 'success';
                         }
-
                     } catch (\Exception $ex) {
                         info($ex->getMessage());
                         $mailResponse = null;
                     }
 
 
-                    $response =null;
-                    if(Helpers::getNotificationStatusData('customer','customer_registration_otp','sms_status')){
+                    $response = null;
+                    if (Helpers::getNotificationStatusData('customer', 'customer_registration_otp', 'sms_status')) {
                         $published_status = addon_published_status('Gateways');
-                        if($published_status == 1){
-                            $response = SmsGateway::send($request['phone'],$otp);
-                        }else{
-                            $response = SMS_module::send($request['phone'],$otp);
+                        if ($published_status == 1) {
+                            $response = SmsGateway::send($request['phone'], $otp);
+                        } else {
+                            $response = SMS_module::send($request['phone'], $otp);
                         }
                     }
 
-//                        if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
-//                            $user->cm_firebase_token = $request->cm_firebase_token;
-//                            $user->save();
-//                        }
-//                        if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
-//                            if (isset($user->cm_firebase_token)) {
-//                                $data = [
-//                                    'title' => translate('messages.verification_otp'),
-//                                    'description' => translate('messages.your_verification_otp_is').' '.$otp,
-//                                    'order_id' => '',
-//                                    'image' => '',
-//                                    'type' => 'otp'
-//                                ];
-//                                Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-//
-//                                DB::table('user_notifications')->insert([
-//                                    'data' => json_encode($data),
-//                                    'user_id' => $user->id,
-//                                    'created_at' => now(),
-//                                    'updated_at' => now()
-//                                ]);
-//                                $response = 'success';
-//                            }
-//                        }
+                    //                        if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
+                    //                            $user->cm_firebase_token = $request->cm_firebase_token;
+                    //                            $user->save();
+                    //                        }
+                    //                        if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
+                    //                            if (isset($user->cm_firebase_token)) {
+                    //                                $data = [
+                    //                                    'title' => translate('messages.verification_otp'),
+                    //                                    'description' => translate('messages.your_verification_otp_is').' '.$otp,
+                    //                                    'order_id' => '',
+                    //                                    'image' => '',
+                    //                                    'type' => 'otp'
+                    //                                ];
+                    //                                Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+                    //
+                    //                                DB::table('user_notifications')->insert([
+                    //                                    'data' => json_encode($data),
+                    //                                    'user_id' => $user->id,
+                    //                                    'created_at' => now(),
+                    //                                    'updated_at' => now()
+                    //                                ]);
+                    //                                $response = 'success';
+                    //                            }
+                    //                        }
 
-                    if($response != 'success' && $mailResponse !== 'success')
-                    {
+                    if ($response != 'success' && $mailResponse !== 'success') {
 
                         $errors = [];
                         array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
@@ -234,9 +229,8 @@ class SocialAuthController extends Controller
                             'errors' => $errors
                         ], 403);
                     }
-
                 }
-                return response()->json(['token' => $token, 'is_phone_verified'=>auth()->user()->is_phone_verified], 200);
+                return response()->json(['token' => $token, 'is_phone_verified' => auth()->user()->is_phone_verified], 200);
             } else {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
@@ -261,12 +255,12 @@ class SocialAuthController extends Controller
 
                 //Check Exists Ref Code Condition
                 if ($check_duplicate_ref) {
-                    return response()->json(['errors'=>['code'=>'ref_code','message'=>'Referral code already used']]);
+                    return response()->json(['errors' => ['code' => 'ref_code', 'message' => 'Referral code already used']]);
                 } else {
-                    if(!isset($data['id']) && !isset($data['kid']) &&  !isset($data['sub']) ){
-                        return response()->json(['error' => 'wrong credential.'],403);
+                    if (!isset($data['id']) && !isset($data['kid']) &&  !isset($data['sub'])) {
+                        return response()->json(['error' => 'wrong credential.'], 403);
                     }
-                    $pk = isset($data['id'])?$data['id']:(  isset($data['kid']) ?  $data['kid'] : $data['sub'] );
+                    $pk = isset($data['id']) ? $data['id'] : (isset($data['kid']) ?  $data['kid'] : $data['sub']);
                     $user = User::create([
                         'f_name' => $fast_name,
                         'l_name' => $last_name,
@@ -303,14 +297,14 @@ class SocialAuthController extends Controller
 
 
                         $notification_data = [
-                            'title' => translate('messages.Your_referral_code_is_used_by').' '.$fast_name.' '.$last_name,
-                            'description' => translate('Be prepare to receive when they complete there first purchase') ,
+                            'title' => translate('messages.Your_referral_code_is_used_by') . ' ' . $fast_name . ' ' . $last_name,
+                            'description' => translate('Be prepare to receive when they complete there first purchase'),
                             'order_id' => '',
                             'image' => '',
                             'type' => 'referral_code',
                         ];
 
-                        if($referar_user?->cm_firebase_token && Helpers::getNotificationStatusData('customer','customer_new_referral_join','push_notification_status')){
+                        if ($referar_user?->cm_firebase_token && Helpers::getNotificationStatusData('customer', 'customer_new_referral_join', 'push_notification_status')) {
                             Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
                             DB::table('user_notifications')->insert([
                                 'data' => json_encode($notification_data),
@@ -321,9 +315,8 @@ class SocialAuthController extends Controller
                         }
 
 
-                        $user->ref_by =$referar_user->id;
+                        $user->ref_by = $referar_user->id;
                         $user->save();
-
                     }
                 }
             } else {
@@ -338,40 +331,40 @@ class SocialAuthController extends Controller
                 'phone' => $user->phone,
                 'password' => $user->social_id
             ];
-            $customer_verification = BusinessSetting::where('key','customer_verification')->first()->value;
-            $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
+            $customer_verification = BusinessSetting::where('key', 'customer_verification')->first()->value;
+            $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value ?? 0;
             if (auth()->loginUsingId($user->id)) {
                 $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
-                if(!auth()->user()->status)
-                {
+                if (!auth()->user()->status) {
                     $errors = [];
                     array_push($errors, ['code' => 'auth-003', 'message' => translate('messages.your_account_is_blocked')]);
                     return response()->json([
                         'errors' => $errors
                     ], 403);
                 }
-                if($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && getEnvMode() != 'demo')
-                {
+                if ($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && getEnvMode() != 'demo') {
                     // $interval_time = BusinessSetting::where('key', 'otp_interval_time')->first();
                     // $otp_interval_time= isset($interval_time) ? $interval_time->value : 20;
-                    $otp_interval_time= 60; //seconds
-                    $phone_verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
-                    if(isset($phone_verification_data) &&  Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
-                        $time= $otp_interval_time - Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds();
+                    $otp_interval_time = 60; //seconds
+                    $phone_verification_data = DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+                    if (isset($phone_verification_data) &&  Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds() < $otp_interval_time) {
+                        $time = $otp_interval_time - Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds();
                         $errors = [];
-                        array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
+                        array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_') . $time . ' ' . translate('messages.seconds')]);
                         return response()->json([
                             'errors' => $errors
                         ], 405);
                     }
 
                     $otp = rand(100000, 999999);
-                    DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                    DB::table('phone_verifications')->updateOrInsert(
+                        ['phone' => $request['phone']],
                         [
-                        'token' => $otp,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                        ]);
+                            'token' => $otp,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]
+                    );
 
                     try {
                         $mailResponse = null;
@@ -379,58 +372,56 @@ class SocialAuthController extends Controller
                             Mail::to($user?->getRawOriginal('email'))->send(new EmailVerification($otp, $user->email));
                             $mailResponse = 'success';
                         }
-
                     } catch (\Exception $ex) {
                         info($ex->getMessage());
                         $mailResponse = null;
                     }
 
-                        $response =null;
-                        if(Helpers::getNotificationStatusData('customer','customer_registration_otp','sms_status')){
-                            $published_status = addon_published_status('Gateways');
-                            if($published_status == 1){
-                                $response = SmsGateway::send($request['phone'],$otp);
-                            }else{
-                                $response = SMS_module::send($request['phone'],$otp);
-                            }
+                    $response = null;
+                    if (Helpers::getNotificationStatusData('customer', 'customer_registration_otp', 'sms_status')) {
+                        $published_status = addon_published_status('Gateways');
+                        if ($published_status == 1) {
+                            $response = SmsGateway::send($request['phone'], $otp);
+                        } else {
+                            $response = SMS_module::send($request['phone'], $otp);
                         }
+                    }
 
-//                            if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
-//                                $user->cm_firebase_token = $request->cm_firebase_token;
-//                                $user->save();
-//                            }
-//                            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
-//
-//                                if (isset($user->cm_firebase_token)) {
-//                                    $data = [
-//                                        'title' => translate('messages.verification_otp'),
-//                                        'description' => translate('messages.your_verification_otp_is').' '.$otp,
-//                                        'order_id' => '',
-//                                        'image' => '',
-//                                        'type' => 'otp'
-//                                    ];
-//                                    Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-//
-//                                    DB::table('user_notifications')->insert([
-//                                        'data' => json_encode($data),
-//                                        'user_id' => $user->id,
-//                                        'created_at' => now(),
-//                                        'updated_at' => now()
-//                                    ]);
-//                                    $response = 'success';
-//                                }
-//                            }
+                    //                            if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
+                    //                                $user->cm_firebase_token = $request->cm_firebase_token;
+                    //                                $user->save();
+                    //                            }
+                    //                            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
+                    //
+                    //                                if (isset($user->cm_firebase_token)) {
+                    //                                    $data = [
+                    //                                        'title' => translate('messages.verification_otp'),
+                    //                                        'description' => translate('messages.your_verification_otp_is').' '.$otp,
+                    //                                        'order_id' => '',
+                    //                                        'image' => '',
+                    //                                        'type' => 'otp'
+                    //                                    ];
+                    //                                    Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+                    //
+                    //                                    DB::table('user_notifications')->insert([
+                    //                                        'data' => json_encode($data),
+                    //                                        'user_id' => $user->id,
+                    //                                        'created_at' => now(),
+                    //                                        'updated_at' => now()
+                    //                                    ]);
+                    //                                    $response = 'success';
+                    //                                }
+                    //                            }
 
-                        if($response != 'success' && $mailResponse !='success')
-                        {
-                            $errors = [];
-                            array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
-                            return response()->json([
-                                'errors' => $errors
-                            ], 403);
-                        }
+                    if ($response != 'success' && $mailResponse != 'success') {
+                        $errors = [];
+                        array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
+                        return response()->json([
+                            'errors' => $errors
+                        ], 403);
+                    }
                 }
-                return response()->json(['token' => $token, 'is_phone_verified'=>auth()->user()->is_phone_verified], 200);
+                return response()->json(['token' => $token, 'is_phone_verified' => auth()->user()->is_phone_verified], 200);
             } else {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
@@ -438,8 +429,6 @@ class SocialAuthController extends Controller
                     'errors' => $errors
                 ], 401);
             }
-
-
         }
 
         return response()->json(['error' => translate('messages.email_does_not_match')]);
@@ -465,9 +454,9 @@ class SocialAuthController extends Controller
         $unique_id = $request['unique_id'];
         try {
             if ($request['medium'] == 'google') {
-                if($request->id_token  == true){
+                if ($request->id_token  == true) {
                     $res = $client->request('GET', 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' . $token);
-                } else{
+                } else {
                     $res = $client->request('GET',  'https://www.googleapis.com/oauth2/v3/userinfo?access_token=' . $token);
                 }
                 $data = json_decode($res->getBody()->getContents(), true);
@@ -475,8 +464,8 @@ class SocialAuthController extends Controller
                 $res = $client->request('GET', 'https://graph.facebook.com/' . $unique_id . '?access_token=' . $token . '&&fields=name,email');
                 $data = json_decode($res->getBody()->getContents(), true);
             } elseif ($request['medium'] == 'apple') {
-                $apple_login_data=\App\Models\BusinessSetting::where(['key'=>'apple_login'])->first();
-                if($apple_login_data){
+                $apple_login_data = \App\Models\BusinessSetting::where(['key' => 'apple_login'])->first();
+                if ($apple_login_data) {
                     $apple_login = json_decode($apple_login_data->value)[0];
                 }
                 $teamId = $apple_login->team_id;
@@ -487,8 +476,8 @@ class SocialAuthController extends Controller
                 $exp = strtotime('+60days');
                 $awsUrl = config('filesystems.disks.s3.url');
                 $awsBucket = config('filesystems.disks.s3.bucket');
-                $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
-                $service_file = (count($apple_login_data?->storage)>0 && $apple_login_data?->storage[0]?->value == 's3') ? $awsBaseURL.'apple-login/'.$apple_login->service_file : 'storage/app/public/apple-login/'.$apple_login->service_file;
+                $awsBaseURL = rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/');
+                $service_file = (count($apple_login_data?->storage) > 0 && $apple_login_data?->storage[0]?->value == 's3') ? $awsBaseURL . 'apple-login/' . $apple_login->service_file : 'storage/app/public/apple-login/' . $apple_login->service_file;
                 $keyContent = file_get_contents($service_file);
 
                 $token = JWT::encode([
@@ -498,7 +487,7 @@ class SocialAuthController extends Controller
                     'aud' => $aud,
                     'sub' => $sub,
                 ], $keyContent, 'ES256', $keyId);
-                $redirect_uri = $apple_login->redirect_url??'www.example.com/apple-callback';
+                $redirect_uri = $apple_login->redirect_url ?? 'www.example.com/apple-callback';
                 $res = Http::asForm()->post('https://appleid.apple.com/auth/token', [
                     'grant_type' => 'authorization_code',
                     'code' => $unique_id,
@@ -508,81 +497,78 @@ class SocialAuthController extends Controller
                 ]);
 
                 $claims = explode('.', $res['id_token'])[1];
-                $data = json_decode(base64_decode($claims),true);
+                $data = json_decode(base64_decode($claims), true);
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'wrong credential.','message'=>$e->getMessage()],403);
+            return response()->json(['error' => 'wrong credential.', 'message' => $e->getMessage()], 403);
         }
-        if(!isset($claims)){
+        if (!isset($claims)) {
 
             if (strcmp($email, $data['email']) != 0 && (!isset($data['id']) && !isset($data['kid']))) {
-                return response()->json(['error' => translate('messages.email_does_not_match')],403);
+                return response()->json(['error' => translate('messages.email_does_not_match')], 403);
             }
         }
 
         $user = User::where('email', $data['email'])->first();
 
-        if($request['medium'] == 'apple'){
-                try {
-                    if(isset($user) == false )
-                    {
-                        $user = new User();
-                    }
-                    $user->f_name = implode('@', explode('@', $data['email'], -1));
-                    $user->l_name = '';
-                    $user->email = $data['email'];
-                    $user->login_medium = $request['medium'];
-                    $user->temp_token = $unique_id;
-                    $user->save();
-                } catch (\Throwable $e) {
-                    return response()->json(['error' => 'wrong credential.','message'=>$e->getMessage()],403);
+        if ($request['medium'] == 'apple') {
+            try {
+                if (isset($user) == false) {
+                    $user = new User();
                 }
+                $user->f_name = implode('@', explode('@', $data['email'], -1));
+                $user->l_name = '';
+                $user->email = $data['email'];
+                $user->login_medium = $request['medium'];
+                $user->temp_token = $unique_id;
+                $user->save();
+            } catch (\Throwable $e) {
+                return response()->json(['error' => 'wrong credential.', 'message' => $e->getMessage()], 403);
             }
-
-        if(isset($user) == false )
-        {
-            return response()->json(['token' => null, 'is_phone_verified'=>0], 200);
         }
 
-        if($request['medium'] == 'apple' && $user->phone == null)
-        {
-            return response()->json(['token' => null, 'is_phone_verified'=>0], 200);
+        if (isset($user) == false) {
+            return response()->json(['token' => null, 'is_phone_verified' => 0], 200);
         }
 
-        $customer_verification = BusinessSetting::where('key','customer_verification')->first()->value;
-        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
+        if ($request['medium'] == 'apple' && $user->phone == null) {
+            return response()->json(['token' => null, 'is_phone_verified' => 0], 200);
+        }
+
+        $customer_verification = BusinessSetting::where('key', 'customer_verification')->first()->value;
+        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value ?? 0;
         if (auth()->loginUsingId($user->id)) {
             $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
-            if(!auth()->user()->status)
-            {
+            if (!auth()->user()->status) {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-003', 'message' => translate('messages.your_account_is_blocked')]);
                 return response()->json([
                     'errors' => $errors
                 ], 403);
             }
-            if($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && getEnvMode() != 'demo')
-            {
+            if ($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && getEnvMode() != 'demo') {
                 // $interval_time = BusinessSetting::where('key', 'otp_interval_time')->first();
                 // $otp_interval_time= isset($interval_time) ? $interval_time->value : 20;
-                $otp_interval_time= 60; //seconds
-                $phone_verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
-                if(isset($phone_verification_data) &&  Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
-                    $time= $otp_interval_time - Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds();
+                $otp_interval_time = 60; //seconds
+                $phone_verification_data = DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+                if (isset($phone_verification_data) &&  Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds() < $otp_interval_time) {
+                    $time = $otp_interval_time - Carbon::parse($phone_verification_data->updated_at)->DiffInSeconds();
                     $errors = [];
-                    array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
+                    array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_') . $time . ' ' . translate('messages.seconds')]);
                     return response()->json([
                         'errors' => $errors
                     ], 405);
                 }
                 $otp = rand(100000, 999999);
-                DB::table('phone_verifications')->updateOrInsert(['phone' => $user->phone],
+                DB::table('phone_verifications')->updateOrInsert(
+                    ['phone' => $user->phone],
                     [
-                    'token' => $otp,
-                    'otp_hit_count' => 0,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                    ]);
+                        'token' => $otp,
+                        'otp_hit_count' => 0,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
 
 
                 try {
@@ -591,50 +577,48 @@ class SocialAuthController extends Controller
                         Mail::to($user?->getRawOriginal('email'))->send(new EmailVerification($otp, $user->email));
                         $mailResponse = 'success';
                     }
-
                 } catch (\Exception $ex) {
                     info($ex->getMessage());
                     $mailResponse = null;
                 }
 
 
-                $response= null;
-                if(Helpers::getNotificationStatusData('customer','customer_login_otp','sms_status')){
+                $response = null;
+                if (Helpers::getNotificationStatusData('customer', 'customer_login_otp', 'sms_status')) {
                     $published_status = addon_published_status('Gateways');
-                    if($published_status == 1){
-                    $response = SmsGateway::send($user->phone,$otp);
-                    }else{
-                        $response = SMS_module::send($user->phone,$otp);
+                    if ($published_status == 1) {
+                        $response = SmsGateway::send($user->phone, $otp);
+                    } else {
+                        $response = SMS_module::send($user->phone, $otp);
                     }
                 }
 
-//                    if(!isset($user->cm_firebase_token) || $user->cm_firebase_token == '@' ){
-//                        $user->cm_firebase_token = $request->cm_firebase_token;
-//                        $user->save();
-//                    }
-//
-//                    if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
-//                        if (isset($user->cm_firebase_token)) {
-//                            $data = [
-//                                'title' => translate('messages.login_otp'),
-//                                'description' => translate('messages.your_login_otp_is').' '.$otp,
-//                                'order_id' => '',
-//                                'image' => '',
-//                                'type' => 'otp'
-//                            ];
-//                            Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-//
-//                            DB::table('user_notifications')->insert([
-//                                'data' => json_encode($data),
-//                                'user_id' => $user->id,
-//                                'created_at' => now(),
-//                                'updated_at' => now()
-//                            ]);
-//                            $response = 'success';
-//                    }
-//                }
-                if($response != 'success' && $mailResponse != 'success')
-                {
+                //                    if(!isset($user->cm_firebase_token) || $user->cm_firebase_token == '@' ){
+                //                        $user->cm_firebase_token = $request->cm_firebase_token;
+                //                        $user->save();
+                //                    }
+                //
+                //                    if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
+                //                        if (isset($user->cm_firebase_token)) {
+                //                            $data = [
+                //                                'title' => translate('messages.login_otp'),
+                //                                'description' => translate('messages.your_login_otp_is').' '.$otp,
+                //                                'order_id' => '',
+                //                                'image' => '',
+                //                                'type' => 'otp'
+                //                            ];
+                //                            Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+                //
+                //                            DB::table('user_notifications')->insert([
+                //                                'data' => json_encode($data),
+                //                                'user_id' => $user->id,
+                //                                'created_at' => now(),
+                //                                'updated_at' => now()
+                //                            ]);
+                //                            $response = 'success';
+                //                    }
+                //                }
+                if ($response != 'success' && $mailResponse != 'success') {
 
                     $errors = [];
                     array_push($errors, ['code' => 'otp', 'message' => translate('messages.faield_to_send_sms')]);
@@ -643,11 +627,11 @@ class SocialAuthController extends Controller
                     ], 403);
                 }
             }
-            if($user->ref_code == null && isset($user->id)){
+            if ($user->ref_code == null && isset($user->id)) {
                 $ref_code = Helpers::generate_referer_code($user);
                 DB::table('users')->where('phone', $user->phone)->update(['ref_code' => $ref_code]);
             }
-            return response()->json(['token' => $token, 'is_phone_verified'=>auth()->user()->is_phone_verified, 'phone'=>$user->phone, 'res'=>$res], 200);
+            return response()->json(['token' => $token, 'is_phone_verified' => auth()->user()->is_phone_verified, 'phone' => $user->phone, 'res' => $res], 200);
         } else {
             $errors = [];
             array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
@@ -657,10 +641,9 @@ class SocialAuthController extends Controller
         }
 
         return response()->json([
-            'errors'=>[
-                ['code'=>'not-found','message' => translate('messages.user_not_found')]
+            'errors' => [
+                ['code' => 'not-found', 'message' => translate('messages.user_not_found')]
             ]
         ], 404);
     }
-
 }
