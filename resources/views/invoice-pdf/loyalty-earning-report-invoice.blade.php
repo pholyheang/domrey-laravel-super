@@ -98,7 +98,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
         }
 
         .text-base {
-            color: #006161;
+            color: #131416;
             font-weight: 700
         }
 

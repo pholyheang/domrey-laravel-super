@@ -469,7 +469,7 @@
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
-                confirmButtonColor: '#00868F',
+                confirmButtonColor: '#FEC404',
                 cancelButtonText: '<?php echo e(translate('messages.no')); ?>',
                 confirmButtonText: '<?php echo e(translate('messages.yes')); ?>',
                 reverseButtons: true

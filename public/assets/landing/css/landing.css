@@ -17,9 +17,9 @@ html {
 }
 
 :root {
-  --primary: #FF6B00;
-  --primary-dark: #e65e00;
-  --primary-rgb: 255, 107, 0;
+  --primary: #FEC404;
+  --primary-dark: #FEC404;
+  --primary-rgb: 254, 196, 4;
   --secondary: #00BE65;
   --secondary-rgb: 0, 190, 101;
   --white-rgb: 255, 255, 255;
@@ -1364,6 +1364,7 @@ body.page-scrolled .main-nav {
 
 .cta-box {
   background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+/* background: linear-gradient(135deg, #2e2e2e, #1b1c1f); */
   border-radius: var(--radius-lg);
   padding: 44px 40px;
   display: flex;
@@ -1541,7 +1542,7 @@ body.page-scrolled .main-nav {
   display: flex;
   gap: 3px;
   margin-bottom: 12px;
-  color: #F0A500;
+  color: #FEC404;
   font-size: .82rem
 }
 
@@ -1601,8 +1602,8 @@ body.page-scrolled .main-nav {
   background: var(--dark);
   color: var(--dark-text-sec);
   padding: 0;
-  --primary: #FF6B00;
-  --primary-dark: #e65e00
+  --primary: #FEC404;
+  --primary-dark: #C99700
 }
 
 .newsletter-area {
@@ -2669,6 +2670,7 @@ body.page-scrolled .main-nav {
 /* Page Hero Banner */
 .page-hero {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  /* background: linear-gradient(135deg, #ffd448, #131416); */
   padding: 48px 0;
   text-align: center;
   color: var(--white);

@@ -1535,7 +1535,7 @@ header.active::after {
     background: #ffffff;
     color: var(--base-1);
     /* border-color: var(--base-1); */
-    border-bottom-color: #000000;
+    border-bottom-color: #131416;
 }
 .nav--tabs .owl-item:not(.synced) .item {
     img {
@@ -1738,7 +1738,7 @@ header.active::after {
     font-weight: 600;
     font-size: 25px;
     line-height: 35px;
-    color: #000000;
+    color: #131416;
 }
 
 @media (max-width: 575px) {
@@ -3468,7 +3468,7 @@ input::-webkit-inner-spin-button {
 .__plan-item {
     --border-clr: #f2f5f9;
     --success: #039d55;
-    --primary-clr: #00868f;
+    --primary-clr: #FEC404;
     background: #ffffff;
     border: 0.721461px solid #f4f4f4;
     box-shadow: 0px 3.60731px 10.8219px rgba(51, 66, 87, 0.05);
@@ -3830,7 +3830,7 @@ input[type="text"] ~ .show-password .icon-1 {
     }
 }
 .popover {
-    background: #000000;
+    background: #131416;
     &-arrow {
         filter: invert(1);
     }
@@ -3962,7 +3962,7 @@ input[type="text"] ~ .show-password .icon-1 {
     .select2-selection--multiple
     .close-icon {
     cursor: pointer;
-    color: #00000078;
+    color: #13141678;
 }
 .multiple-select2
     + .select2-container--default
