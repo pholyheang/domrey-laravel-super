@@ -1918,7 +1918,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"token\": \"\",\n  \"unique_id\": \"\",\n  \"email\": \"user@example.com\",\n  \"medium\": \"google\"\n}",
+              "raw": "{\n  \"token\": \"any_value\",\n  \"unique_id\": \"<authorization_code_from_apple_sdk>\",\n  \"email\": \"\",\n  \"medium\": \"apple\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1967,7 +1967,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"token\": \"\",\n  \"unique_id\": \"\",\n  \"email\": \"user@example.com\",\n  \"phone\": \"+85512345678\",\n  \"medium\": \"google\"\n}",
+              "raw": "{\n  \"token\": \"any_value\",\n  \"unique_id\": \"<temp_token_from_social_login_step>\",\n  \"email\": \"\",\n  \"phone\": \"+85512345678\",\n  \"medium\": \"apple\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
